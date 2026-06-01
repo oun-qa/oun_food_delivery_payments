@@ -1,0 +1,77 @@
+[
+  {
+    "doctype": "Custom Field",
+    "module": "Delivery App Reconciliation",
+    "dt": "Sales Invoice",
+    "fieldname": "dar_delivery_app_section",
+    "fieldtype": "Section Break",
+    "label": "Delivery App",
+    "insert_after": "remarks",
+    "collapsible": 1
+  },
+  {
+    "doctype": "Custom Field",
+    "module": "Delivery App Reconciliation",
+    "dt": "Sales Invoice",
+    "fieldname": "dar_delivery_app",
+    "fieldtype": "Link",
+    "label": "Delivery App",
+    "options": "Delivery App Settings",
+    "insert_after": "dar_delivery_app_section",
+    "in_list_view": 1,
+    "in_standard_filter": 1,
+    "description": "The delivery platform this order came through (e.g. Snoonu, Careem)."
+  },
+  {
+    "doctype": "Custom Field",
+    "module": "Delivery App Reconciliation",
+    "dt": "Sales Invoice",
+    "fieldname": "dar_column_break",
+    "fieldtype": "Column Break",
+    "insert_after": "dar_delivery_app"
+  },
+  {
+    "doctype": "Custom Field",
+    "module": "Delivery App Reconciliation",
+    "dt": "Sales Invoice",
+    "fieldname": "dar_order_id",
+    "fieldtype": "Data",
+    "label": "Delivery App Order ID",
+    "insert_after": "dar_column_break",
+    "in_list_view": 1,
+    "description": "The unique order reference as provided by the delivery app."
+  },
+  {
+    "doctype": "Custom Field",
+    "module": "Delivery App Reconciliation",
+    "dt": "Payment Entry",
+    "fieldname": "dar_payment_section",
+    "fieldtype": "Section Break",
+    "label": "Delivery App",
+    "insert_after": "remarks",
+    "collapsible": 1
+  },
+  {
+    "doctype": "Custom Field",
+    "module": "Delivery App Reconciliation",
+    "dt": "Payment Entry",
+    "fieldname": "dar_delivery_app",
+    "fieldtype": "Link",
+    "label": "Delivery App",
+    "options": "Delivery App Settings",
+    "insert_after": "dar_payment_section",
+    "in_list_view": 1,
+    "in_standard_filter": 1,
+    "description": "The delivery platform this payment was received from."
+  },
+  {
+    "doctype": "Custom Field",
+    "module": "Delivery App Reconciliation",
+    "dt": "Payment Entry",
+    "fieldname": "dar_settlement_reference",
+    "fieldtype": "Data",
+    "label": "Settlement Reference",
+    "insert_after": "dar_delivery_app",
+    "description": "The settlement batch or transfer reference number from the delivery app."
+  }
+]

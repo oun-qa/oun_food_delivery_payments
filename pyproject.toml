@@ -1,0 +1,12 @@
+[project]
+name = "delivery_app_reconciliation"
+authors = [{ name = "Developer", email = "dev@company.qa" }]
+description = "Delivery App Payment Reconciliation — ERPNext customization layer"
+requires-python = ">=3.10"
+readme = "README.md"
+dynamic = ["version"]
+dependencies = []
+
+[build-system]
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
