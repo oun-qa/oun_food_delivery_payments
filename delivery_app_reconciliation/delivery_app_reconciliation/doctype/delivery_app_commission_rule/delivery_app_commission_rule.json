@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "enabled",
+  "rule_name",
+  "fee_type",
+  "rate_percent",
+  "fixed_amount",
+  "apply_if_order_amount_gt",
+  "description"
+ ],
+ "fields": [
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Enabled"
+  },
+  {
+   "fieldname": "rule_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Rule Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fee_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Fee Type",
+   "options": "Percentage\nFixed",
+   "reqd": 1
+  },
+  {
+   "fieldname": "rate_percent",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Rate (%)",
+   "depends_on": "eval:doc.fee_type == 'Percentage'"
+  },
+  {
+   "fieldname": "fixed_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Fixed Amount",
+   "depends_on": "eval:doc.fee_type == 'Fixed'"
+  },
+  {
+   "fieldname": "apply_if_order_amount_gt",
+   "fieldtype": "Currency",
+   "label": "Apply If Order Amount >",
+   "description": "Optional threshold. Leave empty to apply this fee to every imported order."
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  }
+ ],
+ "idx": 0,
+ "istable": 1,
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Delivery App Reconciliation",
+ "name": "Delivery App Commission Rule",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

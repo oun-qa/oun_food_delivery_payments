@@ -11,18 +11,32 @@
   "is_active",
   "section_break_erp",
   "linked_customer",
+  "company",
   "column_break_2",
   "currency",
+  "delivery_service_item",
   "section_break_financial",
-  "commission_rate",
+  "commission_rules",
   "column_break_3",
+  "commission_rate",
   "receivable_account",
   "section_break_contract",
   "contract_start_date",
   "column_break_4",
   "contract_end_date",
   "section_break_notes",
-  "notes"
+  "notes",
+  "section_break_import_status",
+  "last_import_status",
+  "column_break_import_status_1",
+  "last_import_job_id",
+  "last_import_started_at",
+  "column_break_import_status_2",
+  "last_import_completed_at",
+  "last_import_created",
+  "last_import_skipped",
+  "last_import_failed",
+  "last_import_error_log"
  ],
  "fields": [
   {
@@ -59,6 +73,14 @@
    "description": "The ERPNext Customer record representing this delivery app. Sales Invoices and Payment Entries will be raised against this customer."
   },
   {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1,
+   "description": "Company context used to filter accounts, cost centers, and create imported Sales Invoices."
+  },
+  {
    "fieldname": "column_break_2",
    "fieldtype": "Column Break"
   },
@@ -70,6 +92,13 @@
    "default": "QAR"
   },
   {
+   "fieldname": "delivery_service_item",
+   "fieldtype": "Link",
+   "label": "Delivery Service Item",
+   "options": "Item",
+   "description": "Default non-stock item used when creating Sales Invoices from imported delivery app orders."
+  },
+  {
    "fieldname": "section_break_financial",
    "fieldtype": "Section Break",
    "label": "Financial Terms"
@@ -77,9 +106,17 @@
   {
    "fieldname": "commission_rate",
    "fieldtype": "Percent",
-   "label": "Commission Rate (%)",
-   "reqd": 1,
-   "description": "The percentage the delivery app deducts from each order before remitting to the restaurant."
+   "hidden": 1,
+   "label": "Legacy Commission Rate (%)",
+   "read_only": 1,
+   "description": "Deprecated. Use Commission Rules instead."
+  },
+  {
+   "fieldname": "commission_rules",
+   "fieldtype": "Table",
+   "label": "Commission Rules",
+   "options": "Delivery App Commission Rule",
+   "description": "Define platform deductions such as percentage commission, fixed delivery fees, or conditional fees."
   },
   {
    "fieldname": "column_break_3",
@@ -119,6 +156,69 @@
    "fieldname": "notes",
    "fieldtype": "Long Text",
    "label": "Notes"
+  },
+  {
+   "fieldname": "section_break_import_status",
+   "fieldtype": "Section Break",
+   "label": "CSV Import Status",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "last_import_status",
+   "fieldtype": "Select",
+   "label": "Last Import Status",
+   "options": "\nQueued\nRunning\nCompleted\nCompleted With Errors\nFailed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_import_status_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "last_import_job_id",
+   "fieldtype": "Data",
+   "label": "Last Import Job ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_import_started_at",
+   "fieldtype": "Datetime",
+   "label": "Last Import Started At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_import_status_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "last_import_completed_at",
+   "fieldtype": "Datetime",
+   "label": "Last Import Completed At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_import_created",
+   "fieldtype": "Int",
+   "label": "Last Import Created Invoices",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_import_skipped",
+   "fieldtype": "Int",
+   "label": "Last Import Skipped Duplicates",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_import_failed",
+   "fieldtype": "Int",
+   "label": "Last Import Failed Rows",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_import_error_log",
+   "fieldtype": "Long Text",
+   "label": "Last Import Error Log",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,

@@ -31,3 +31,7 @@ scheduler_events = {
         "delivery_app_reconciliation.delivery_app_reconciliation.doctype.delivery_app_settings.delivery_app_settings.flag_overdue_invoices"
     ]
 }
+
+after_migrate = [
+    "delivery_app_reconciliation.delivery_app_reconciliation.doctype.delivery_app_settings.delivery_app_settings.migrate_legacy_commission_rates"
+]

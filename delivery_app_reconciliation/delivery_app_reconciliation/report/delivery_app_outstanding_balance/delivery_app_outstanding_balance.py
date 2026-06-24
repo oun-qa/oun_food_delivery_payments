@@ -1,6 +1,8 @@
 # Copyright (c) 2024, Developer and contributors
 # License: MIT
 
+from collections import defaultdict
+
 import frappe
 from frappe import _
 from frappe.utils import getdate, today
@@ -77,38 +79,39 @@ def get_columns():
 
 
 def get_data(filters):
-    conditions = ["si.docstatus = 1", "si.dar_delivery_app IS NOT NULL", "si.dar_delivery_app != ''"]
-    values = {}
+    if not frappe.has_permission("Sales Invoice", "read"):
+        return []
+
+    invoice_filters = [
+        ["docstatus", "=", 1],
+        ["dar_delivery_app", "!=", ""],
+    ]
 
     if filters.get("delivery_app"):
-        conditions.append("si.dar_delivery_app = %(delivery_app)s")
-        values["delivery_app"] = filters["delivery_app"]
+        invoice_filters.append(["dar_delivery_app", "=", filters["delivery_app"]])
 
     if filters.get("from_date"):
-        conditions.append("si.posting_date >= %(from_date)s")
-        values["from_date"] = filters["from_date"]
+        invoice_filters.append(["posting_date", ">=", filters["from_date"]])
 
     if filters.get("to_date"):
-        conditions.append("si.posting_date <= %(to_date)s")
-        values["to_date"] = filters["to_date"]
+        invoice_filters.append(["posting_date", "<=", filters["to_date"]])
 
-    where_clause = "WHERE " + " AND ".join(conditions)
+    invoices = frappe.get_list(
+        "Sales Invoice",
+        filters=invoice_filters,
+        fields=[
+            "name",
+            "dar_delivery_app",
+            "posting_date",
+            "grand_total",
+            "outstanding_amount",
+            "due_date",
+        ],
+        order_by="dar_delivery_app asc, posting_date desc",
+        limit_page_length=0,
+    )
 
-    raw = frappe.db.sql(f"""
-        SELECT
-            si.dar_delivery_app                         AS delivery_app,
-            DATE_FORMAT(si.posting_date, '%%Y-%%m')     AS period_key,
-            DATE_FORMAT(si.posting_date, '%%M %%Y')     AS period,
-            COUNT(si.name)                              AS invoice_count,
-            SUM(si.grand_total)                         AS gross_invoiced,
-            SUM(si.grand_total - si.outstanding_amount) AS total_paid,
-            SUM(si.outstanding_amount)                  AS outstanding_amount,
-            MIN(si.due_date)                            AS oldest_due_date
-        FROM `tabSales Invoice` si
-        {where_clause}
-        GROUP BY si.dar_delivery_app, period_key
-        ORDER BY si.dar_delivery_app, period_key DESC
-    """, values, as_dict=True)
+    raw = _aggregate_invoices(invoices)
 
     today_date = getdate(today())
     result = []
@@ -143,6 +146,43 @@ def get_data(filters):
         })
 
     return result
+
+
+def _aggregate_invoices(invoices):
+    grouped = defaultdict(lambda: {
+        "invoice_count": 0,
+        "gross_invoiced": 0,
+        "total_paid": 0,
+        "outstanding_amount": 0,
+        "oldest_due_date": None,
+    })
+
+    for invoice in invoices:
+        posting_date = getdate(invoice.posting_date)
+        period_key = posting_date.strftime("%Y-%m")
+        key = (invoice.dar_delivery_app, period_key)
+        row = grouped[key]
+
+        row["delivery_app"] = invoice.dar_delivery_app
+        row["period_key"] = period_key
+        row["period"] = posting_date.strftime("%B %Y")
+        row["invoice_count"] += 1
+        row["gross_invoiced"] += invoice.grand_total or 0
+        row["total_paid"] += (invoice.grand_total or 0) - (invoice.outstanding_amount or 0)
+        row["outstanding_amount"] += invoice.outstanding_amount or 0
+
+        if invoice.due_date:
+            due_date = getdate(invoice.due_date)
+            if not row["oldest_due_date"] or due_date < getdate(row["oldest_due_date"]):
+                row["oldest_due_date"] = invoice.due_date
+
+    return [
+        frappe._dict(row)
+        for row in sorted(
+            grouped.values(),
+            key=lambda item: (item["delivery_app"], -int(item["period_key"].replace("-", ""))),
+        )
+    ]
 
 
 def get_summary(data):
