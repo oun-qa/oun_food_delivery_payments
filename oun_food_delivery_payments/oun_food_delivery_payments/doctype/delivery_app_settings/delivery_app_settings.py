@@ -397,7 +397,7 @@ def import_orders_from_csv(file_url, delivery_app, income_account=None, cost_cen
     )
 
     frappe.enqueue(
-        "delivery_app_reconciliation.delivery_app_reconciliation.doctype.delivery_app_settings.delivery_app_settings.process_orders_csv_import",
+        "oun_food_delivery_payments.oun_food_delivery_payments.doctype.delivery_app_settings.delivery_app_settings.process_orders_csv_import",
         queue="long",
         timeout=3600,
         enqueue_after_commit=True,

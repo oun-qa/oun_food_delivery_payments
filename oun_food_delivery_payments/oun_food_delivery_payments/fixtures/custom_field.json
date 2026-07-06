@@ -1,7 +1,7 @@
 [
   {
     "doctype": "Custom Field",
-    "module": "Delivery App Reconciliation",
+    "module": "Oun Food Delivery Payments",
     "dt": "Sales Invoice",
     "fieldname": "dar_delivery_app_section",
     "fieldtype": "Section Break",
@@ -11,7 +11,7 @@
   },
   {
     "doctype": "Custom Field",
-    "module": "Delivery App Reconciliation",
+    "module": "Oun Food Delivery Payments",
     "dt": "Sales Invoice",
     "fieldname": "dar_delivery_app",
     "fieldtype": "Link",
@@ -24,7 +24,7 @@
   },
   {
     "doctype": "Custom Field",
-    "module": "Delivery App Reconciliation",
+    "module": "Oun Food Delivery Payments",
     "dt": "Sales Invoice",
     "fieldname": "dar_column_break",
     "fieldtype": "Column Break",
@@ -32,7 +32,7 @@
   },
   {
     "doctype": "Custom Field",
-    "module": "Delivery App Reconciliation",
+    "module": "Oun Food Delivery Payments",
     "dt": "Sales Invoice",
     "fieldname": "dar_order_id",
     "fieldtype": "Data",
@@ -43,7 +43,7 @@
   },
   {
     "doctype": "Custom Field",
-    "module": "Delivery App Reconciliation",
+    "module": "Oun Food Delivery Payments",
     "dt": "Payment Entry",
     "fieldname": "dar_payment_section",
     "fieldtype": "Section Break",
@@ -53,7 +53,7 @@
   },
   {
     "doctype": "Custom Field",
-    "module": "Delivery App Reconciliation",
+    "module": "Oun Food Delivery Payments",
     "dt": "Payment Entry",
     "fieldname": "dar_delivery_app",
     "fieldtype": "Link",
@@ -66,7 +66,7 @@
   },
   {
     "doctype": "Custom Field",
-    "module": "Delivery App Reconciliation",
+    "module": "Oun Food Delivery Payments",
     "dt": "Payment Entry",
     "fieldname": "dar_settlement_reference",
     "fieldtype": "Data",

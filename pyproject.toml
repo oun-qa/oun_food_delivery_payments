@@ -1,5 +1,5 @@
 [project]
-name = "delivery_app_reconciliation"
+name = "oun_food_delivery_payments"
 authors = [{ name = "Developer", email = "dev@company.qa" }]
 description = "Delivery App Payment Reconciliation — ERPNext customization layer"
 requires-python = ">=3.10"

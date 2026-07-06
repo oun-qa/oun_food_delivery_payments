@@ -1,4 +1,4 @@
-# Delivery App Reconciliation — Frappe/ERPNext Custom App
+# Oun Food Delivery Payments — Frappe/ERPNext Custom App
 
 A thin ERPNext customization layer for tracking and reconciling payments from food delivery platforms (Snoonu, Careem, Talabat, etc.).
 
@@ -9,8 +9,8 @@ This app does **not** duplicate ERPNext. It extends it. Every order is a native 
 ## Installation
 
 ```bash
-bench get-app /path/to/delivery_app_reconciliation
-bench --site your-site.local install-app delivery_app_reconciliation
+bench get-app /path/to/oun_food_delivery_payments
+bench --site your-site.local install-app oun_food_delivery_payments
 bench --site your-site.local migrate
 ```
 

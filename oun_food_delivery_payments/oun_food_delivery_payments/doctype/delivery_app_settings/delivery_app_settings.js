@@ -98,7 +98,7 @@ function _show_import_dialog(frm) {
                 indicator: 'blue'
             });
             frappe.call({
-                method: 'delivery_app_reconciliation.delivery_app_reconciliation.doctype.delivery_app_settings.delivery_app_settings.import_orders_from_csv',
+                method: 'oun_food_delivery_payments.oun_food_delivery_payments.doctype.delivery_app_settings.delivery_app_settings.import_orders_from_csv',
                 args: {
                     file_url: values.csv_file,
                     delivery_app: frm.doc.name,
@@ -126,7 +126,7 @@ function _show_import_dialog(frm) {
 
 function _check_import_status(frm) {
     frappe.call({
-        method: 'delivery_app_reconciliation.delivery_app_reconciliation.doctype.delivery_app_settings.delivery_app_settings.get_csv_import_status',
+        method: 'oun_food_delivery_payments.oun_food_delivery_payments.doctype.delivery_app_settings.delivery_app_settings.get_csv_import_status',
         args: {
             delivery_app: frm.doc.name
         },
@@ -145,7 +145,7 @@ function _poll_import_status(frm, job_id) {
     let poll = function() {
         attempts += 1;
         frappe.call({
-            method: 'delivery_app_reconciliation.delivery_app_reconciliation.doctype.delivery_app_settings.delivery_app_settings.get_csv_import_status',
+            method: 'oun_food_delivery_payments.oun_food_delivery_payments.doctype.delivery_app_settings.delivery_app_settings.get_csv_import_status',
             args: {
                 delivery_app: frm.doc.name,
                 job_id: job_id
