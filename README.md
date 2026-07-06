@@ -9,12 +9,34 @@ This app does **not** duplicate ERPNext. It extends it. Every order is a native 
 ## Installation
 
 ```bash
-bench get-app /path/to/oun_food_delivery_payments
+bench get-app --skip-assets git@github.com:oun-qa/oun_food_delivery_payments.git
 bench --site your-site.local install-app oun_food_delivery_payments
+bench build --app oun_food_delivery_payments
 bench --site your-site.local migrate
 ```
 
-The `migrate` step applies the custom fields to Sales Invoice and Payment Entry automatically.
+Use `--skip-assets` on the first `get-app` command. Some Bench/Frappe versions run
+`bench build --app oun_food_delivery_payments` before the new app is fully listed in
+`sites/apps.txt`, which can make esbuild fail with:
+
+```text
+TypeError [ERR_INVALID_ARG_TYPE]: The "paths[0]" argument must be of type string. Received undefined
+```
+
+After `install-app`, the app is registered and `bench build --app oun_food_delivery_payments`
+can run normally. The `migrate` step applies the custom fields to Sales Invoice and Payment Entry automatically.
+
+### If `bench get-app` Already Failed During Build
+
+If the repository was cloned successfully but the command failed at `bench build --app
+oun_food_delivery_payments`, run these commands from the bench root:
+
+```bash
+grep -qxF oun_food_delivery_payments sites/apps.txt || echo oun_food_delivery_payments >> sites/apps.txt
+bench build --app oun_food_delivery_payments
+bench --site your-site.local install-app oun_food_delivery_payments
+bench --site your-site.local migrate
+```
 
 ## Components
 
