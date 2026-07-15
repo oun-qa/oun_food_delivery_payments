@@ -69,6 +69,8 @@ SNO-2024-07-001,2024-07-01,150.000,
 SNO-2024-07-002,2024-07-02,220.500,Disputed order
 ```
 
+The importer also accepts common delivery platform report columns, including Talabat-style columns such as `Order ID`, `Order received at`, `Subtotal`, and `Order Items`.
+
 Each row creates one submitted Sales Invoice with two line items:
 1. Gross order amount (revenue)
 2. Commission deduction (negative line) — so the invoice net = what the platform owes

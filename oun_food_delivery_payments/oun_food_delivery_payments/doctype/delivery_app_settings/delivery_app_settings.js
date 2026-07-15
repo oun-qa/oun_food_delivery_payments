@@ -72,7 +72,7 @@ function _show_import_dialog(frm) {
                 fieldname: 'csv_file',
                 fieldtype: 'Attach',
                 reqd: 1,
-                description: 'Upload a CSV with columns: order_id, order_date, gross_amount, notes (optional)'
+                description: 'Upload a CSV with standard columns or delivery platform columns such as Order ID, Order received at, Subtotal, Order Items'
             },
             {
                 label: 'Cost Center',

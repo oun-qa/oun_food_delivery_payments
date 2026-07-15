@@ -443,6 +443,96 @@ def get_csv_import_status(delivery_app, job_id=None):
     return status
 
 
+def _normalize_csv_header(header):
+    """Normalize delivery platform CSV headers to a predictable key."""
+    import re
+
+    return re.sub(r"[^a-z0-9]+", "_", (header or "").strip().lower()).strip("_")
+
+
+def _pick_csv_value(row, aliases):
+    for alias in aliases:
+        value = row.get(alias)
+        if value is not None and str(value).strip():
+            return str(value).strip()
+    return ""
+
+
+def _clean_csv_amount(value):
+    import re
+
+    value = str(value or "").strip()
+    if not value:
+        return ""
+
+    # Accept values like "QAR 1,234.50" or "1,234.50 ر.ق".
+    value = re.sub(r"[^0-9.,\-]", "", value)
+    if "," in value and "." in value:
+        value = value.replace(",", "")
+    elif "," in value and "." not in value:
+        value = value.replace(",", ".")
+    return value
+
+
+CSV_ORDER_ID_ALIASES = (
+    "order_id",
+    "order_no",
+    "order_number",
+    "order_reference",
+    "order_ref",
+    "external_order_id",
+    "platform_order_id",
+    "delivery_order_id",
+    "reference_id",
+    "reference",
+    "id",
+)
+
+CSV_ORDER_DATE_ALIASES = (
+    "order_date",
+    "order_received_at",
+    "received_at",
+    "date",
+    "created_at",
+    "created_date",
+    "creation_date",
+    "transaction_date",
+    "business_date",
+    "completed_at",
+    "delivered_at",
+)
+
+CSV_GROSS_AMOUNT_ALIASES = (
+    "gross_amount",
+    "subtotal",
+    "sub_total",
+    "order_total",
+    "total_amount",
+    "grand_total",
+    "total",
+    "gross",
+    "amount",
+    "sales",
+    "item_total",
+    "food_total",
+    "estimated_earnings",
+    "payout_amount",
+)
+
+CSV_NOTES_ALIASES = (
+    "notes",
+    "note",
+    "order_items",
+    "description",
+    "remarks",
+    "comment",
+    "comments",
+    "restaurant_name",
+    "store",
+    "branch",
+)
+
+
 def process_orders_csv_import(file_url, delivery_app, cost_center=None, import_job_id=None, user=None):
     """
     Background worker for CSV imports. Creates and submits Sales Invoices, then
@@ -503,15 +593,18 @@ def process_orders_csv_import(file_url, delivery_app, cost_center=None, import_j
                 frappe.throw("CSV file is empty or missing headers.")
 
             # Normalize headers
-            reader.fieldnames = [h.strip().lower().replace(" ", "_") for h in reader.fieldnames]
+            reader.fieldnames = [_normalize_csv_header(h) for h in reader.fieldnames]
 
             for i, row in enumerate(reader, start=2):
-                order_id = row.get("order_id", "").strip()
-                order_date_raw = row.get("order_date", "").strip()
-                gross_amount_raw = row.get("gross_amount", "").strip()
+                order_id = _pick_csv_value(row, CSV_ORDER_ID_ALIASES)
+                order_date_raw = _pick_csv_value(row, CSV_ORDER_DATE_ALIASES)
+                gross_amount_raw = _clean_csv_amount(_pick_csv_value(row, CSV_GROSS_AMOUNT_ALIASES))
+                notes = _pick_csv_value(row, CSV_NOTES_ALIASES)
 
                 if not order_id or not order_date_raw or not gross_amount_raw:
-                    errors.append(f"Row {i}: Missing required field (order_id, order_date, or gross_amount). Skipped.")
+                    errors.append(
+                        f"Row {i}: Missing required field. Expected order id, order date, and gross amount columns. Skipped."
+                    )
                     failed += 1
                     continue
 
@@ -525,7 +618,6 @@ def process_orders_csv_import(file_url, delivery_app, cost_center=None, import_j
                     frappe.db.savepoint(savepoint)
 
                     order_date = getdate(order_date_raw)
-                    notes = row.get("notes", "")
 
                     # Build the Sales Invoice
                     inv = frappe.get_doc({
